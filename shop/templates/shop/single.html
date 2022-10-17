@@ -1,0 +1,73 @@
+{% extends 'shop/main.html' %} 
+{% load static %}
+{% block content %}
+
+
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6" id="b_image">
+            <img src="{{product.image1.url}}" alt='{{product.name}}' width="500">
+        </div>
+        <div class="col-md-6">
+            <h4>Product name: {{product.name}}</h4>
+            <br>
+            <p>Product price: ${{product.price}}</p>
+            {% if product.discount > 0 %}
+            <p>Product Discount {{product.discount}}%</p>
+            {% endif %}
+            <b>Product Discription</b>
+            <p>{{product.description}}</p>
+            <form action="{% url 'addcart' %}" method="POST">
+                {% csrf_token %}
+              
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <button type="submit" class="btn btn-warning">Add to cart </button>
+
+                <label form="" >Quantity:</label>
+                <input type="number" name="quantity" id="" value="1" min='1' max="{{product.stock}}">
+                
+                <label form="">Colors:</label>
+                <select name="colors" id=''>
+                    {% for c in col %}
+                    
+                        <option value="{{c}}">{{c}}</option>
+                    
+                    {% endfor %}
+                </select>
+                
+            </form>
+                
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="s_image" onclick="click();" >
+            <img src="{{product.image1.url}}" class="p-3" alt='{{product.name}}' height="190" width='200'>
+            <img src="{{product.image2.url}}" class="p-3"  alt='{{product.name}}' height="190" width='200'>
+            <img src="{{product.image3.url}}" class='p-3' alt='{{product.name}}' height="190" width='200'>
+        </div>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+
+    var b_image = document.getElementById("b_image");
+    var s_image = document.getElementById("s_image").getElementsByTagName('img');
+    for(var i = 0; i < s_image.lenght; i++) {
+        s_image[i].addEventlistner(function click(){
+        let ImageSRC = this.getAttribute("src");
+        b_image.innerHTML = "<img src" + ImageSRC+">"
+            
+    });
+    }
+  
+
+</script>
+
+
+
+
+{% endblock %}

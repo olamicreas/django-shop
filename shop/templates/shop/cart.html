@@ -1,0 +1,141 @@
+
+{% extends 'shop/main.html' %}
+{% load mathfilters %}
+{% load static %}
+{% load fil_tags %}
+{% block content %}
+<link rel="stylesheet" type="text/css"  href="{% static 'css/main.css' %}">
+	
+		<div class="row">
+			<div class="col-lg-12">
+				
+				<div class="box-element">
+
+					<a  class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+
+					<br>
+					<br>
+					
+					<table class="table">
+						<tr>
+							<th><h5>Items: <strong></strong></h5></th>
+							<th><h5>Total:<strong id="amount">{{grandtotal}} </strong></h5></th>
+							<th>
+								
+								<button style="float:right; margin:5px;" class="btn btn-success"  onclick="payWithPaystack()" type="submit">Checkout</button>
+								
+							</th>
+						</tr>
+					</table>
+					
+
+				</div>
+
+				<br>
+				<div class="box-element">
+					<div class="cart-row">
+						<div style="flex:2"></div>
+						<div style="flex:2"><strong>Item</strong></div>
+						<div style="flex:1"><strong>Price</strong></div>
+						<div style="flex:1"><strong>Quantity</strong></div>
+						<div style="flex:1"><strong>Color</strong></div>
+						<div style="flex:1"><strong>Discount</strong></div>
+						<div style="flex:1"><strong>Dlivry</strong></div>
+						<div style="flex:1"><strong>Total</strong></div>
+					</div>
+					
+					{% for k, v in request.session.cart.items %}
+					
+					
+					<div class="cart-row">
+						{{loop.index}}
+						
+						<div style="flex:2"><img src="{{v.image}}" alt="{{product.name}}" width="150" height="100"></div>
+						<div style="flex:2" name="name">{{v.name}}</div>
+						<div style="flex:1"  ><p></p>{{v.price}}</div>
+						<div style="flex:1">
+							<p class="quantity"><input type="number" min="1" max="{{v.stock}}" value="{{v.quantity}}" name="quantity" style="width: 30px; height: 20px;"></p>
+							<div class="quantity">
+								
+							</div>
+						</div>
+						<div style="flex:1">
+							
+							<select name="color" id="color">
+								
+								
+								
+								
+								
+									<option value='{{v.colors}}' >{{v.colors}}</option>
+								
+									
+									
+								
+							
+								
+							
+							</select>
+							
+						</div>
+						{% if v.discount > 0 %}
+						<div style="flex:1"><p>{{v.discount}}%</p></div>
+						<div style="flex:1"><p>${{deliveryFee}}</p></div>
+						{% endif %}
+						{% autoescape off %}
+						
+						<div style="flex:1"><p>{{v.quantity|mul:v.price|sub:v.discount}}</p></div>
+						
+						{% endautoescape %}
+						
+						
+						
+					</div>
+					
+					{% endfor %}
+					
+
+				</div>
+			</div>
+		</div>
+
+	
+
+
+	<script src="https://js.paystack.co/v1/inline.js"></script> 
+
+	<script>
+		
+		function payWithPaystack() {
+			var handler = PaystackPop.setup({
+			key: 'pk_test_314dccd680068de3e230b7714972b3637607fbfb', // Replace with your public key
+			email: '{{request.user.email}}',
+			amount: '{{grandtotal}}' * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
+			currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
+			ref: document.getElementById('invoice'), // Replace with a reference you generated
+			callback: function(response) {
+			  //this happens after the payment is completed successfully
+			  var reference = response.reference;
+			  alert('Payment complete! Reference: ' + reference);
+			  window.location.href = "{% url 'checkout' %}"
+			  // Make an AJAX call to your server with the reference to verify the transaction
+			},
+			onClose: function() {
+			  alert('Transaction was not completed, window closed.');
+			  
+			 
+			},
+		  });
+		  handler.openIframe();
+		}
+
+
+
+
+
+
+	</script>
+
+{% endblock content %}
+
+
