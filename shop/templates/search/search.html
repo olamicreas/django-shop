@@ -1,0 +1,58 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% block content %} 
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<br>
+
+
+<div class="row" >
+    {% for p in result %}
+    <div class="col-md-4 mt-5" >
+        <div class="box-element product">
+        <div class="text-center">
+       
+            <img class="thumbnaial" src="{{p.object.image1.url}}" height="200">
+           
+        </div>
+            <h6>
+                {{p.name}}
+            </h6>
+            <hr>
+            
+
+               
+                
+            
+			<a class="btn btn-outline-success" href="{% url 'single' p.id %}" style="margin: 1rem;">View</a>
+			<h4 style="display: inline-block; float: right;"><strong>${{p.price}}</strong></h4>
+            <form action="{% url 'addcart' %}" method="POST" style="display: inline-block; float: left;">
+                {% csrf_token %}
+              
+                <input type="hidden" name="product_id" value="{{p.id}}">
+                <button type="submit" class="btn btn-warning" style="margin: 1rem;">Add to cart </button>
+
+                
+                <input type="number"  name="quantity" value="1" max="{{p.stock}}" style="display: none;" >
+                <input type="number"  name="colors" value="{{p.colors.0}}" max="" style="display: none;" >
+                
+            </form>
+          
+        </div>
+    </div>
+
+
+    {% endfor %}
+</div>
+<br>
+<div class="f" style="display: flex; justify-content: center;">
+    
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-dark" style="border-radius: 10px; margin: 10px;">Previous</a>
+    {% endif %}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-info" id="n" style="border-radius: 10px; margin: 10px;">Next »</a>
+    {% endif %}
+  </div>
+
+{% endblock %}

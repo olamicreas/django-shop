@@ -11,7 +11,7 @@ class Product(models.Model):
     discount = models.FloatField(blank=True, null=True)
     stock = models.CharField(max_length=300)
     colors = models.TextField()
-    description = models.TextField()
+    description = models.CharField(max_length=300)
     brand = models.ManyToManyField('Brand', related_name='brand')
     category = models.ManyToManyField('Category', related_name='category')
     image1 = models.ImageField(default='me.png', null=False, upload_to='product_pics')

@@ -3,8 +3,10 @@ import builtins
 import collections
 from copyreg import pickle
 from distutils.command.install_egg_info import safe_name
+from email.mime import image
 from heapq import merge
 import json
+from unicodedata import name
 from django.views.generic.list import ListView
 from itertools import chain, product
 from math import prod
@@ -18,6 +20,7 @@ from django.core import serializers
 from django import template
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
+from haystack.query import SearchQuerySet
 
 from pypaystack import Transaction, Customer, Plan
 
@@ -152,3 +155,10 @@ class SearchView(ListView):
         context['product'] = Product.objects.filter(name__icontains=name)
         
         return context
+
+
+
+def searching(request):
+    result = SearchQuerySet().filter(content=request.GET.get('pname'))
+    
+    return render(request, 'search/search.html', {'result': result})

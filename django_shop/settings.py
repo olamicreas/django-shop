@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mathfilters',
     'django_elasticsearch_dsl',
-    'paystack'
+    'paystack',
+    'haystack',
+
     
 ]
 
@@ -96,6 +98,12 @@ DATABASES = {
 ELASTICSEARCH_DSL={
     'default': {
         'hosts': 'localhost:9200'
+    },
+}
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
 
